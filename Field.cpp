@@ -20,7 +20,12 @@ Field::Field(Point endPoints[4], Ball ball) {
 }
 
 void Field::hit(Point target, double power) {
-
+	double new_x = ball.center.x - ((ball.center.x - target.x) * power);
+	double new_y = ball.center.y - ((ball.center.y - target.y) * power);
+	if(new_x >  endPoints[0].x and new_x < endPoints[2].x and new_y > endPoints[0].y and new_y < endPoints[2].y){
+		ball.center.x = new_x;
+		ball.center.y = new_y;
+	}
 }
 
 ostream& operator<<(ostream& os, const Field& f) {
