@@ -1,4 +1,7 @@
 #pragma once
+// your declarations (and certain types of definitions) here
+
+
 #include "Point.h"
 
 struct Line {

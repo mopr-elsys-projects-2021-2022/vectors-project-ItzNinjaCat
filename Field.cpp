@@ -85,6 +85,14 @@ void Field::hit(Point target, double power) {
 	
 }
 
+ostream& operator<<(ostream& os, const Field& f) {
+	os << "Field points:" << endl;
+	for(int i = 0; i < 4; i++)
+		os << "  " << f.endPoints[i] << endl;
+	os << f.ball;
+
+	return os;
+}
 
 void simpleCase(Field& f) {
 	Point origin;
