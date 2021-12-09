@@ -20,22 +20,71 @@ Field::Field(Point endPoints[4], Ball ball) {
 }
 
 void Field::hit(Point target, double power) {
+
 	double new_x = ball.center.x - ((ball.center.x - target.x) * power);
 	double new_y = ball.center.y - ((ball.center.y - target.y) * power);
-	if(new_x >  endPoints[0].x and new_x < endPoints[2].x and new_y > endPoints[0].y and new_y < endPoints[2].y){
-		ball.center.x = new_x;
-		ball.center.y = new_y;
+	Point new_p(new_x, new_y);
+	//pseudo code
+	//if point outside wall 1-4
+	Line ball_line(ball.center, target);
+	Line rectangle[4];
+	rectangle[0] = Line(endPoints[0], endPoints[1]);
+	rectangle[1] = Line(endPoints[1], endPoints[2]);
+	rectangle[2] = Line(endPoints[2], endPoints[3]);
+	rectangle[3] = Line(endPoints[3], endPoints[0]);
+	Point perp_point_tmp;
+	int bounce_index = -1;
+	for(int i = 0; i < 4; i++){
+		perp_point_tmp = Point((ball_line.B - rectangle[i].B) / (rectangle[i].A - ball_line.A), (ball_line.A * (ball_line.B - rectangle[i].B) / (rectangle[i].A - ball_line.A)) + ball_line.B);
+		if((new_p.x < perp_point_tmp.x and perp_point_tmp.x < ball.center.x) and (new_p.y < perp_point_tmp.y and perp_point_tmp.y < ball.center.y)){
+			bounce_index = i;
+		}
+		else if((new_p.x > perp_point_tmp.x and perp_point_tmp.x > ball.center.x) and (new_p.y > perp_point_tmp.y and perp_point_tmp.y > ball.center.y)) {
+			bounce_index = i;
+		}
 	}
+	if(bounce_index != -1){
+		Line bounce_line_perp(-1 / rectangle[bounce_index].A, new_p.y - (-1 / rectangle[bounce_index].A * new_p.x));
+		double border_point = (rectangle[bounce_index].B - bounce_line_perp.B) / (bounce_line_perp.A - rectangle[bounce_index].A);
+		Point new_point_on_border(border_point, (rectangle[bounce_index].A * border_point) + rectangle[bounce_index].B);
+		Point after_bounce(new_point_on_border.x * 2 - new_p.x, new_point_on_border.y * 2 - new_p.y);
+		ball.center.x = after_bounce.x;
+		ball.center.y = after_bounce.y;
+	}
+	else{
+		ball.center.x = new_p.x;
+		ball.center.y = new_p.y;
+	}
+		//double border_eq_a1 = (endPoints[0].y - endPoints[1].y)/(endPoints[0].x - endPoints[1].x);
+		//double border_eq_b1 = endPoints[0].y - (border_eq_a1 * endPoints[0].x);
+		//double perpendicular_eq_a = -1 / border_eq_a1;
+		//double perpendicular_eq_b = new_p.y - (perpendicular_eq_a * new_p.x);
+		//double border_point = (border_eq_b1 - perpendicular_eq_b) / (perpendicular_eq_a - border_eq_a1);
+		//Point new_point_on_border(border_point, (border_eq_a1 * border_point) + border_eq_b1);
+		//Point after_bounce(new_point_on_border.x * 2 - new_p.x, new_point_on_border.y * 2 - new_p.y);
+		//if any of the walls lie on the x/y axis case
+	
+
+		/*
+		double border_eq_a2 = (endPoints[1].y - endPoints[2].y)/(endPoints[1].x - endPoints[2].x);
+		double border_eq_b2 = endPoints[1].y - (border_eq_a2 * endPoints[1].x);
+		double border_eq_a3 = (endPoints[2].y - endPoints[3].y)/(endPoints[2].x - endPoints[3].x);
+		double border_eq_b3 = endPoints[2].y - (border_eq_a3 * endPoints[2].x);
+		double border_eq_a4 = (endPoints[3].y - endPoints[0].y)/(endPoints[3].x - endPoints[0].x);
+		double border_eq_b4 = endPoints[3].y - (border_eq_a4 * endPoints[3].x);
+		double a = (ball.center.y - new_y) / (ball.center.x - new_x);
+		double b = ball.center.y - (a * ball.center.x);
+		Point border_intersect_1((border_eq_b1 - b) / (a - border_eq_a1), (a * (border_eq_b1 - b) / (a - border_eq_a1)) + b);
+		//case first wall bounce
+		if((ball.center.x < border_intersect_1.x && border_intersect_1.x < new_x && ball.center.y < border_intersect_1.y && border_intersect_1.y < new_y) || (ball.center.x > border_intersect_1.x && border_intersect_1.x > new_x  && ball.center.y > border_intersect_1.y && border_intersect_1.y > new_y)){
+			// -a* new_x - b = new_y
+		}
+	*/
+	
+
+	
 }
 
-ostream& operator<<(ostream& os, const Field& f) {
-	os << "Field points:" << endl;
-	for(int i = 0; i < 4; i++)
-		os << "  " << f.endPoints[i] << endl;
-	os << f.ball;
-
-	return os;
-}
 
 void simpleCase(Field& f) {
 	Point origin;
