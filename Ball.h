@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Point.h"
+#include "Line.h"
 
 struct Ball {
 	Point center;
