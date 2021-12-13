@@ -94,8 +94,8 @@
       "name": "Ball bounce once - complex case, no diameter",
       "setup": "g++ -o task main.cpp Field.cpp Vector.cpp Line.cpp",
       "run": "./task",
-      "input": "",
-      "output": "",
+      "input": "c c\r\n60 -80\r\n220 40\r\n160 120\r\n0 0\r\n90 -10\r\n0\r\nh\r\n100 -70\r\n1\r\nf\r\nq",
+      "output": "Field points:\r\n  (60, -80)\r\n  (220, 40)\r\n  (160, 120)\r\n  (0, 0)\r\nBall center - (80.8, -44.4)\r\nBall diameter - 0\r\nEnter a command (c - change parameters, h - hit ball, f - show field specs or q - quit): ",
       "comparison": "included",
       "timeout": 1,
       "points": null
@@ -104,28 +104,8 @@
       "name": "Ball bounce once - complex case, diameter",
       "setup": "g++ -o task main.cpp Field.cpp Vector.cpp Line.cpp",
       "run": "./task",
-      "input": "",
-      "output": "",
-      "comparison": "included",
-      "timeout": 1,
-      "points": null
-    },
-    {
-      "name": "Ball bounce once - complex corner",
-      "setup": "g++ -o task main.cpp Field.cpp Vector.cpp Line.cpp",
-      "run": "./task",
-      "input": "",
-      "output": "",
-      "comparison": "included",
-      "timeout": 1,
-      "points": null
-    },
-    {
-      "name": "Ball bounce once - complex case, power",
-      "setup": "g++ -o task main.cpp Field.cpp Vector.cpp Line.cpp",
-      "run": "./task",
-      "input": "",
-      "output": "",
+      "input": "c c\r\n60 -80\r\n220 40\r\n160 120\r\n0 0\r\n90 -10\r\n20\r\nh\r\n100 -70\r\n1\r\nf\r\nq",
+      "output": "Field points:\r\n  (60, -80)\r\n  (220, 40)\r\n  (160, 120)\r\n  (0, 0)\r\nBall center - (68.8, -28.4)\r\nBall diameter - 20\r\nEnter a command (c - change parameters, h - hit ball, f - show field specs or q - quit): ",
       "comparison": "included",
       "timeout": 1,
       "points": null
@@ -145,7 +125,7 @@
       "setup": "g++ -o task main.cpp Field.cpp Vector.cpp Line.cpp",
       "run": "./task",
       "input": "c s\r\n0 0\r\n320 160\r\n20 20\r\n20\r\nh\r\n-20 100\r\n2\r\nf\r\nq",
-      "output": "Field points:\r\n  (0, 0)\r\n  (320, 0)\r\n  (320, 160)\r\n  (0, 160)\r\nBall center - (80, 120)\r\nBall diameter - 0\r\nEnter a command (c - change parameters, h - hit ball, f - show field specs or q - quit):",
+      "output": "Field points:\r\n  (0, 0)\r\n  (320, 0)\r\n  (320, 160)\r\n  (0, 160)\r\nBall center - (80, 120)\r\nBall diameter - 20\r\nEnter a command (c - change parameters, h - hit ball, f - show field specs or q - quit):",
       "comparison": "included",
       "timeout": 1,
       "points": null
@@ -154,8 +134,8 @@
       "name": "Ball bounce more than once - complex case, no diameter",
       "setup": "g++ -o task main.cpp Field.cpp Vector.cpp Line.cpp",
       "run": "./task",
-      "input": "",
-      "output": "",
+      "input": "c c\r\n60 -80\r\n220 40\r\n160 120\r\n0 0\r\n90 -10\r\n0\r\nh\r\n70 -110\r\n1\r\nf\r\nq",
+      "output": "Field points:\r\n  (60, -80)\r\n  (220, 40)\r\n  (160, 120)\r\n  (0, 0)\r\nBall center - (50, -50)\r\nBall diameter - 0\r\nEnter a command (c - change parameters, h - hit ball, f - show field specs or q - quit): ",
       "comparison": "included",
       "timeout": 1,
       "points": null
@@ -164,8 +144,8 @@
       "name": "Ball bounce more than once - complex case, diameter",
       "setup": "g++ -o task main.cpp Field.cpp Vector.cpp Line.cpp",
       "run": "./task",
-      "input": "",
-      "output": "",
+      "input": "c c\r\n60 -80\r\n220 40\r\n160 120\r\n0 0\r\n90 -10\r\n20\r\nh\r\n70 -110\r\n1\r\nf\r\nq",
+      "output": "Field points:\r\n  (60, -80)\r\n  (220, 40)\r\n  (160, 120)\r\n  (0, 0)\r\nBall center - (54, -22)\r\nBall diameter - 20\r\nEnter a command (c - change parameters, h - hit ball, f - show field specs or q - quit): ",
       "comparison": "included",
       "timeout": 1,
       "points": null
@@ -174,18 +154,8 @@
       "name": "Ball bounce more than once - complex corner",
       "setup": "g++ -o task main.cpp Field.cpp Vector.cpp Line.cpp",
       "run": "./task",
-      "input": "",
-      "output": "",
-      "comparison": "included",
-      "timeout": 1,
-      "points": null
-    },
-    {
-      "name": "Ball bounce more than once - complex case, power",
-      "setup": "g++ -o task main.cpp Field.cpp Vector.cpp Line.cpp",
-      "run": "./task",
-      "input": "",
-      "output": "",
+      "input": "c c\r\n60 -80\r\n220 40\r\n160 120\r\n0 0\r\n90 -10\r\n20\r\nh\r\n12 -316\r\n1\r\nf\r\nq",
+      "output": "Field points:\r\n  (60, -80)\r\n  (220, 40)\r\n  (160, 120)\r\n  (0, 0)\r\nBall center - (90, -10)\r\nBall diameter - 20\r\nEnter a command (c - change parameters, h - hit ball, f - show field specs or q - quit): ",
       "comparison": "included",
       "timeout": 1,
       "points": null
@@ -195,7 +165,7 @@
       "setup": "g++ -o task main.cpp Field.cpp Vector.cpp Line.cpp",
       "run": "./task",
       "input": "c s\r\n0 0\r\n320 160\r\n10 10\r\n10\r\nh\r\n4 4\r\n1\r\nf\r\nq",
-      "output": "Field points:\r\n  (0, 0)\r\n  (320, 0)\r\n  (320, 160)\r\n  (0, 160)\r\nBall center - (10, 10)\r\nBall diameter - 10\r\nEnter a command (c - change parameters, h - hit ball, f - show field specs or q - quit):",
+      "output": "Field points:\r\n  (0, 0)\r\n  (320, 0)\r\n  (320, 160)\r\n  (0, 160)\r\nBall center - (4, 4)\r\nBall diameter - 10\r\nEnter a command (c - change parameters, h - hit ball, f - show field specs or q - quit):",
       "comparison": "included",
       "timeout": 1,
       "points": null
@@ -205,9 +175,19 @@
       "setup": "g++ -o task main.cpp Field.cpp Vector.cpp Line.cpp",
       "run": "./task",
       "input": "c s\r\n0 0\r\n320 160\r\n20 20\r\n20\r\nh\r\n5 35\r\n1\r\nf\r\nq",
-      "output": "Field points:\r\n  (0, 0)\r\n  (320, 0)\r\n  (320, 160)\r\n  (0, 160)\r\nBall center - (15, 35)\r\nBall diameter - 0\r\nEnter a command (c - change parameters, h - hit ball, f - show field specs or q - quit):",
+      "output": "Field points:\r\n  (0, 0)\r\n  (320, 0)\r\n  (320, 160)\r\n  (0, 160)\r\nBall center - (15, 35)\r\nBall diameter - 20\r\nEnter a command (c - change parameters, h - hit ball, f - show field specs or q - quit):",
       "comparison": "included",
       "timeout": 1,
+      "points": null
+    },
+    {
+      "name": "Double hit - edge case",
+      "setup": "g++ -o task main.cpp Field.cpp Vector.cpp Line.cpp",
+      "run": "./task",
+      "input": "c c\r\n60 -80\r\n220 40\r\n160 120\r\n0 0\r\n90 -10\r\n20\r\nh\r\n72 -52\r\n1\r\nh\r\n0 -220\r\n1\r\nf\r\nq",
+      "output": "Field points:\r\n  (60, -80)\r\n  (220, 40)\r\n  (160, 120)\r\n  (0, 0)\r\nBall center - (90, -10)\r\nBall diameter - 20\r\nEnter a command (c - change parameters, h - hit ball, f - show field specs or q - quit): ",
+      "comparison": "included",
+      "timeout": 10,
       "points": null
     }
   ]
