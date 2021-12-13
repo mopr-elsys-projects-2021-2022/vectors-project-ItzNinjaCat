@@ -19,4 +19,9 @@ struct Line {
 			C = p1.x;
 		}
 	}
+	friend ostream& operator<<(ostream& os, const Line& l) {
+	os << "(" << l.A << ", " << l.B << ", " << l.C << ")";
+
+	return os;
+}
 };
