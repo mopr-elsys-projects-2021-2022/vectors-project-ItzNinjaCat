@@ -1,6 +1,7 @@
 #include "Field.h"
 #include <cmath>
 #include <cfloat>
+#include <limits>
 Field::Field() {}
 
 Field::Field(Point origin, double width, double height, Ball ball) {
@@ -21,6 +22,20 @@ Field::Field(Point endPoints[4], Ball ball) {
 	this->ball = ball;
 	this->startingPoint = ball.center;
 }
+
+	bool definitelyGreaterThan(float a, double b)
+	{
+   		 return (a - b) > ( (fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * numeric_limits<double>::epsilon());
+	}
+
+	bool definitelyLessThan(double a, double b)
+	{
+	    return (b - a) > ( (fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * numeric_limits<double>::epsilon());
+	}
+	bool essentiallyEqual(double a, double b)
+	{
+    	return fabs(a - b) <= ( (fabs(a) > fabs(b) ? fabs(b) : fabs(a)) * numeric_limits<double>::epsilon());
+	}
 
 Point Field::generate_intersect_point(const Line& l1,const Line& l2){
 	Point perp_point_tmp;
@@ -45,10 +60,14 @@ int Field::corner_hit_check(Line ball_l, Point corners[], Point& cmp_p1, Point& 
 	Point save_intersect_point;
 	int corner_index = -1;
 	for(int i = 0;i < 4; i++){
-		if(((corners[i].x - cmp_p1.x) / (cmp_p2.x - cmp_p1.x)) == ((corners[i].y - cmp_p1.y) / (cmp_p2.y - cmp_p1.y)) 
-		and ((corners[i].x - cmp_p1.x) / (cmp_p2.x - cmp_p1.x)) < 1 and ((corners[i].x - cmp_p1.x) / (cmp_p2.x - cmp_p1.x)) > 0){
+		double a = ((corners[i].x - cmp_p1.x) / (cmp_p2.x - cmp_p1.x));
+		double b = ((corners[i].y - cmp_p1.y) / (cmp_p2.y - cmp_p1.y));
+		double scale = 0.000001;
+    	a = floor(a / scale + 0.5) * scale;
+    	b = floor(b / scale + 0.5) * scale;
+		if(essentiallyEqual(a, b) and ( a < 1 and a > 0)){
 			if(corner_index != -1){
-				if(calculate_distance(corners[i], cmp_p2) < calculate_distance(save_intersect_point, cmp_p2) ){
+				if(definitelyLessThan(calculate_distance(corners[i], cmp_p2), calculate_distance(save_intersect_point, cmp_p2))){
 					corner_index = i;
 					save_intersect_point.x = corners[i].x;
 					save_intersect_point.y = corners[i].y;
@@ -73,9 +92,12 @@ int Field::collision(Line ball_l, Line walls[4], Point& cmp_p1, Point& cmp_p2){
 		perp_point_tmp = generate_intersect_point(ball_l, walls[i]);
 		double a = ((perp_point_tmp.x - cmp_p1.x) / (cmp_p2.x - cmp_p1.x));
 		double b = ((perp_point_tmp.y - cmp_p1.y) / (cmp_p2.y - cmp_p1.y));
-		if((fabs(a - b) < DBL_EPSILON) and ( a < 1 and a > 0)){
+		double scale = 0.000001;
+    	a = floor(a / scale + 0.5) * scale;
+    	b = floor(b / scale + 0.5) * scale;
+		if(essentiallyEqual(a, b) and ( a < 1 and a > 0)){
 			if(bounce_index != -1){
-				if(calculate_distance(perp_point_tmp, cmp_p2) < calculate_distance(save_intersect_point, cmp_p2) ){
+				if(definitelyLessThan(calculate_distance(perp_point_tmp, cmp_p2), calculate_distance(save_intersect_point, cmp_p2)) ){
 					bounce_index = i;
 					save_intersect_point.x = perp_point_tmp.x;
 					save_intersect_point.y = perp_point_tmp.y;
@@ -166,6 +188,7 @@ void Field::hit(Point target, double power) {
 
 	int corner_case = corner_hit_check(ball_line, endPoints_cpy, new_p, ball.center);
 	int bounce_index = collision(ball_line, rectangle, new_p, ball.center);
+	cout << bounce_index << endl;
 	while(bounce_index != -1 or corner_case != -1){
 		if(corner_case != -1){
 			ball.center.x = startingPoint.x;
@@ -196,6 +219,7 @@ void Field::hit(Point target, double power) {
 					bounce_line_perp = Line(-1 / rectangle[bounce_index].A, -1,new_p.y - (-1 / rectangle[bounce_index].A * new_p.x));
 					new_point_on_border = generate_intersect_point(bounce_line_perp, rectangle[bounce_index]);
 				}
+				cout << bounce_line_perp.A << "  " << bounce_line_perp.B << "   " << bounce_line_perp.C << endl;
 				Point after_bounce(new_point_on_border.x * 2 - new_p.x, new_point_on_border.y * 2 - new_p.y);
 				ball.center.x = after_bounce.x;
 				ball.center.y = after_bounce.y;
