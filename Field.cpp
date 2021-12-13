@@ -164,9 +164,8 @@ void Field::hit(Point target, double power) {
 		endPoints_cpy[3] = Point(endPoints[3].x, endPoints[3].y);
 	}
 
-	int corner_case = corner_hit_check(ball_line, endPoints, new_p, ball.center);
+	int corner_case = corner_hit_check(ball_line, endPoints_cpy, new_p, ball.center);
 	int bounce_index = collision(ball_line, rectangle, new_p, ball.center);
-	cout << bounce_index << endl;
 	while(bounce_index != -1 or corner_case != -1){
 		if(corner_case != -1){
 			ball.center.x = startingPoint.x;
@@ -205,7 +204,7 @@ void Field::hit(Point target, double power) {
 			intersect = generate_intersect_point(ball_line, rectangle[bounce_index]);
 			ball_line = Line(intersect, ball.center);
 			bounce_index = collision(ball_line, rectangle, ball.center, intersect);
-			corner_case = corner_hit_check(ball_line, endPoints, ball.center, intersect);
+			corner_case = corner_hit_check(ball_line, endPoints_cpy, ball.center, intersect);
 		}
 			new_p.x = ball.center.x;
 			new_p.y = ball.center.y;
