@@ -230,7 +230,9 @@ void Field::hit(Point target, double power) {
 			intersect = generate_intersect_point(ball_line, rectangle[bounce_index]);
 			ball_line = Line(intersect, ball.center);
 			bounce_index = collision(ball_line, rectangle, ball.center, intersect);
-			
+			if(corner_hit_check(ball_line, endPoints, ball.center, intersect) != -1){
+				return;
+			}
 			new_p.x = ball.center.x;
 			new_p.y = ball.center.y;
 	}
