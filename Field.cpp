@@ -65,7 +65,7 @@ int Field::corner_hit_check(Line ball_l, Point corners[], Point& cmp_p1, Point& 
 		double scale = 0.000001;
     	a = floor(a / scale + 0.5) * scale;
     	b = floor(b / scale + 0.5) * scale;
-		if(essentiallyEqual(a, b) and ( a < 1 and a > 0)){
+		if(essentiallyEqual(a, b) and ( a < 1 and a >= 0)){
 			if(corner_index != -1){
 				if(definitelyLessThan(calculate_distance(corners[i], cmp_p2), calculate_distance(save_intersect_point, cmp_p2))){
 					corner_index = i;
