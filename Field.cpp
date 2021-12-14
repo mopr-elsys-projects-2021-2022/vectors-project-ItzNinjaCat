@@ -28,7 +28,7 @@ double area(const Point& p1, const Point& p2, const Point& p3)
     return abs((p1.x * (p2.y - p3.y) + p2.x * (p3.y - p1.y) + p3.x * (p1.y - p2.y)) / 2.0);
 }
   
-bool check(Point corners[],const Point& p)
+bool check_if_point_is_inside_rect(Point corners[],const Point& p)
 {
     double A = area(corners[0], corners[1], corners[2]) ;
 	double B = area(corners[0], corners[3], corners[2]);
@@ -55,6 +55,20 @@ Point Field::intersection_point(const Line& l1,const Line& l2){
 	tmp = Point(x, y);
 
 	return tmp;
+}
+
+Line Field::perpendicular_line(const Line& line, const Point& p){
+	Line perp_line;
+	if(line.A == 0){
+		perp_line = Line(1, 0, -p.x);
+	}
+	else if(line.B == 0){
+		perp_line = Line(0 , -1, p.y);
+	}
+	else{
+		perp_line = Line(-1 / line.A, -1, p.y - (-1 / line.A * p.x));
+	}
+	return perp_line;
 }
 
 double Field::calculate_distance(const Point& p1, const Point& p2){
@@ -120,20 +134,6 @@ int Field::collision(Line ball_l, Line walls[4], Point& p1, Point& p2){
 
 }
 
-Line Field::perpendicular_line(const Line& line, const Point& p){
-	Line perp_line;
-	if(line.A == 0){
-		perp_line = Line(1, 0, -p.x);
-	}
-	else if(line.B == 0){
-		perp_line = Line(0 , -1, p.y);
-	}
-	else{
-		perp_line = Line(-1 / line.A, -1, p.y - (-1 / line.A * p.x));
-	}
-	return perp_line;
-}
-
 Point Field::calculated_new_point(const Point& p1, const Point& p2, const double& power){
 	double new_x = p1.x - ((p1.x - p2.x) * power);
 	double new_y = p1.y - ((p1.y - p2.y) * power);
@@ -145,6 +145,9 @@ void Field::hit(Point target, double power) {
 	if(power < 1 or power > 10){
 		throw "Incorrect power";
 		return;
+	}
+	if(!check_if_point_is_inside_rect(endPoints, ball.center)){
+		throw "Ball outside table";
 	}
 	Point new_p;
 	new_p = calculated_new_point(ball.center, target, power);
@@ -188,10 +191,6 @@ void Field::hit(Point target, double power) {
 		endPoints_cpy[2] = Point(endPoints[2].x, endPoints[2].y);
 		endPoints_cpy[3] = Point(endPoints[3].x, endPoints[3].y);
 	}
-	if(!check(endPoints_cpy, ball.center)){
-		throw "Ball outside table";
-	}
-
 
 	int corner_case = corner_hit_check(ball_line, endPoints, new_p, ball.center);
 	int bounce_index = collision(ball_line, rectangle, new_p, ball.center);
