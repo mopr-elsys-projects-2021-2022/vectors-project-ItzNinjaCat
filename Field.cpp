@@ -42,7 +42,7 @@ bool check(Point corners[],const Point& p)
     return (A == A1 + A2 + A3 + A4);
 }
 
-Point Field::generate_intersect_point(const Line& l1,const Line& l2){
+Point Field::intersection_point(const Line& l1,const Line& l2){
 	Point tmp;
 	double x = (l1.B * l2.C - l2.B * l1.C) / (l1.A * l2.B - l2.A * l1.B);
 	double y = (l1.C * l2.A - l2.C * l1.A) / (l1.A * l2.B - l2.A * l1.B);
@@ -94,7 +94,7 @@ int Field::collision(Line ball_l, Line walls[4], Point& p1, Point& p2){
 	Point save_point;
 	int bounce_index = -1;
 	for(int i = 0; i < 4; i++){
-		tmp = generate_intersect_point(ball_l, walls[i]);
+		tmp = intersection_point(ball_l, walls[i]);
 		double a = ((tmp.x - p1.x) / (p2.x - p1.x));
 		double b = ((tmp.y - p1.y) / (p2.y - p1.y));
 		double scale = 0.000001;
@@ -120,7 +120,7 @@ int Field::collision(Line ball_l, Line walls[4], Point& p1, Point& p2){
 
 }
 
-Line Field::generate_perpendicular_line(const Line& line, const Point& p){
+Line Field::perpendicular_line(const Line& line, const Point& p){
 	Line perp_line;
 	if(line.A == 0){
 		perp_line = Line(1, 0, -p.x);
@@ -170,15 +170,15 @@ void Field::hit(Point target, double power) {
 		smaller_endPoints[3].x = endPoints[3].x - ((ball.diameter / 2 )* (endPoints[3].x - endPoints[0].x) / calculate_distance(endPoints[3], endPoints[0]));
 		smaller_endPoints[3].y = endPoints[3].y - ((ball.diameter / 2 )* (endPoints[3].y - endPoints[0].y) / calculate_distance(endPoints[3], endPoints[0]));
 		
-		rectangle[0] = generate_perpendicular_line(rectangle[1], smaller_endPoints[1]);
-		rectangle[1] = generate_perpendicular_line(rectangle[2], smaller_endPoints[2]);
-		rectangle[2] = generate_perpendicular_line(rectangle[3], smaller_endPoints[3]);
-		rectangle[3] = generate_perpendicular_line(rectangle[0], smaller_endPoints[0]);
+		rectangle[0] = perpendicular_line(rectangle[1], smaller_endPoints[1]);
+		rectangle[1] = perpendicular_line(rectangle[2], smaller_endPoints[2]);
+		rectangle[2] = perpendicular_line(rectangle[3], smaller_endPoints[3]);
+		rectangle[3] = perpendicular_line(rectangle[0], smaller_endPoints[0]);
 		
-		smaller_endPoints[1] = generate_intersect_point(rectangle[0], rectangle[1]);
-		smaller_endPoints[2] = generate_intersect_point(rectangle[1], rectangle[2]);
-		smaller_endPoints[3] = generate_intersect_point(rectangle[2], rectangle[3]);
-		smaller_endPoints[0] = generate_intersect_point(rectangle[3], rectangle[0]);
+		smaller_endPoints[1] = intersection_point(rectangle[0], rectangle[1]);
+		smaller_endPoints[2] = intersection_point(rectangle[1], rectangle[2]);
+		smaller_endPoints[3] = intersection_point(rectangle[2], rectangle[3]);
+		smaller_endPoints[0] = intersection_point(rectangle[3], rectangle[0]);
 		
 		endPoints_cpy[0] = Point(smaller_endPoints[0].x, smaller_endPoints[0].y);
 		endPoints_cpy[1] = Point(smaller_endPoints[1].x, smaller_endPoints[1].y);
@@ -216,15 +216,15 @@ void Field::hit(Point target, double power) {
 			else{
 				Line bounce_line_perp;
 				Point new_point_on_border;
-				bounce_line_perp = generate_perpendicular_line(rectangle[bounce_index], new_p);
-				new_point_on_border = generate_intersect_point(bounce_line_perp, rectangle[bounce_index]);		
+				bounce_line_perp = perpendicular_line(rectangle[bounce_index], new_p);
+				new_point_on_border = intersection_point(bounce_line_perp, rectangle[bounce_index]);		
 
 				Point after_bounce(new_point_on_border.x * 2 - new_p.x, new_point_on_border.y * 2 - new_p.y);
 				ball.center.x = after_bounce.x;
 				ball.center.y = after_bounce.y;
 			}
 			Point intersect;
-			intersect = generate_intersect_point(ball_line, rectangle[bounce_index]);
+			intersect = intersection_point(ball_line, rectangle[bounce_index]);
 			ball_line = Line(intersect, ball.center);
 			bounce_index = collision(ball_line, rectangle, ball.center, intersect);
 			corner_case = corner_hit_check(ball_line, endPoints, ball.center, intersect);
