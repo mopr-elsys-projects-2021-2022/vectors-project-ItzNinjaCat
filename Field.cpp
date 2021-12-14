@@ -60,10 +60,16 @@ int Field::corner_hit_check(Line ball_l, Point corners[], Point& cmp_p1, Point& 
 	Point save_intersect_point;
 	int corner_index = -1;
 	for(int i = 0;i < 4; i++){
+		double a = ((corners[i].x - cmp_p1.x) / (cmp_p2.x - cmp_p1.x));
+		double b = ((corners[i].y - cmp_p1.y) / (cmp_p2.y - cmp_p1.y));
+		double scale = 0.000001;
+		//cout << "before "<< endl;
+		//cout << a << " " << b << endl;
+    	a = floor(a / scale + 0.5) * scale;
+    	b = floor(b / scale + 0.5) * scale;
     	//cout << "after "<< endl;
     	//cout << a << " " << b << endl;
-    	if(ball_l.A * corners[i].x + ball_l.B * corners[i].y + ball_l.C == 0){
-		//if(essentiallyEqual(a, b) and ( a < 1 and a >= 0)){
+		if(essentiallyEqual(a, b) and ( a < 1 and a >= 0)){
 			if(corner_index != -1){
 				if(definitelyLessThan(calculate_distance(corners[i], cmp_p2), calculate_distance(save_intersect_point, cmp_p2))){
 					corner_index = i;
@@ -79,22 +85,6 @@ int Field::corner_hit_check(Line ball_l, Point corners[], Point& cmp_p1, Point& 
 
 		}
 	}
-		if(corner_index != -1){
-			double a = ((corners[corner_index].x - cmp_p1.x) / (cmp_p2.x - cmp_p1.x));
-			double b = ((corners[corner_index].y - cmp_p1.y) / (cmp_p2.y - cmp_p1.y));
-			double scale = 0.000001;
-    		a = floor(a / scale + 0.5) * scale;
-    		b = floor(b / scale + 0.5) * scale;
-    		if(essentiallyEqual(a, b) and ( a < 1 and a >= 0)){
-    			ball.center.x = startingPoint.x;
-    			ball.center.y = startingPoint.y;
-    		}
-    		else{
-    			ball.center.x = cmp_p1.x;
-    			ball.center.y = cmp_p1.y;
-    		}
-    	}
-	
 	return corner_index;
 }
 
@@ -159,9 +149,6 @@ void Field::hit(Point target, double power) {
 	new_p = calculated_new_point(ball.center, target, power);
 	Line ball_line;
 	ball_line = Line(ball.center, new_p);
-	if(corner_hit_check(ball_line, endPoints, new_p, ball.center) != -1){
-		return;
-	}
 	Line rectangle[4];
 	Point endPoints_cpy[4];
 	
@@ -202,8 +189,17 @@ void Field::hit(Point target, double power) {
 		endPoints_cpy[2] = Point(endPoints[2].x, endPoints[2].y);
 		endPoints_cpy[3] = Point(endPoints[3].x, endPoints[3].y);
 	}
+
+	int corner_case = corner_hit_check(ball_line, endPoints, new_p, ball.center);
+	cout << corner_case << endl;
 	int bounce_index = collision(ball_line, rectangle, new_p, ball.center);
-	while(bounce_index != -1){
+	while(bounce_index != -1 or corner_case != -1){
+		if(corner_case != -1){
+			ball.center.x = startingPoint.x;
+			ball.center.y = startingPoint.y;
+			return;
+		}
+		else{
 			int next_index = bounce_index + 1;
 			if(bounce_index == 3){
 			 next_index = 0;
@@ -230,9 +226,8 @@ void Field::hit(Point target, double power) {
 			intersect = generate_intersect_point(ball_line, rectangle[bounce_index]);
 			ball_line = Line(intersect, ball.center);
 			bounce_index = collision(ball_line, rectangle, ball.center, intersect);
-			if(corner_hit_check(ball_line, endPoints, ball.center, intersect) != -1){
-				return;
-			}
+			corner_case = corner_hit_check(ball_line, endPoints, ball.center, intersect);
+		}
 			new_p.x = ball.center.x;
 			new_p.y = ball.center.y;
 	}
