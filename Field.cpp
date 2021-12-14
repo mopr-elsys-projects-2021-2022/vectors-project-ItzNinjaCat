@@ -23,7 +23,30 @@ Field::Field(Point endPoints[4], Ball ball) {
 	this->startingPoint = ball.center;
 }
 
-	bool definitelyGreaterThan(float a, double b)
+
+double area(const Point& p1, const Point& p2, const Point& p3)
+{
+    return abs((p1.x * (p2.y - p3.y) + p2.x * (p3.y - p1.y) + p3.x * (p1.y - p2.y)) / 2.0);
+}
+  
+bool check(Point corners[],const Point& p)
+{
+    double A = area(corners[0], corners[1], corners[2]) ;
+	double B = area(corners[0], corners[3], corners[2]);
+  	A += B;
+  	
+    double A1 = area(p, corners[0], corners[1]);
+    double A2 = area(p, corners[1], corners[2]);
+    double A3 = area(p, corners[2], corners[3]);
+    double A4 = area(p, corners[0], corners[3]);
+
+    return (A == A1 + A2 + A3 + A4);
+}
+
+
+
+
+	bool definitelyGreaterThan(double a, double b)
 	{
    		 return (a - b) > ( (fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * numeric_limits<double>::epsilon());
 	}
@@ -76,19 +99,9 @@ int Field::corner_hit_check(Line ball_l, Point corners[], Point& cmp_p1, Point& 
 				ball.center.y = cmp_p1.y;
 				return -1;
 			}
-			if(corner_index != -1){
-				if(definitelyLessThan(calculate_distance(corners[i], cmp_p2), calculate_distance(save_intersect_point, cmp_p2))){
-					corner_index = i;
-					save_intersect_point.x = corners[i].x;
-					save_intersect_point.y = corners[i].y;
-					}
-			}	
-			else{
-				corner_index = i;
-				save_intersect_point.x = corners[i].x;
-				save_intersect_point.y = corners[i].y;
-			}
-
+			corner_index = i;
+			save_intersect_point.x = corners[i].x;
+			save_intersect_point.y = corners[i].y;
 		}
 	}
 	return corner_index;
@@ -151,14 +164,15 @@ void Field::hit(Point target, double power) {
 		throw "Incorrect power";
 		return;
 	}
+	if(!check(endPoints, ball.center)){
+		throw "Ball outside table";
+	}
 	Point new_p;
 	new_p = calculated_new_point(ball.center, target, power);
 	Line ball_line;
 	ball_line = Line(ball.center, new_p);
 	Line rectangle[4];
 	Point endPoints_cpy[4];
-	
-	
 	rectangle[0] = Line(endPoints[0], endPoints[1]);
 	rectangle[1] = Line(endPoints[1], endPoints[2]);
 	rectangle[2] = Line(endPoints[2], endPoints[3]);
