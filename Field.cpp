@@ -78,7 +78,7 @@ double Field::calculate_distance(const Point& p1, const Point& p2){
 }
 
 int Field::corner_hit_check(Line ball_l, Point corners[], Point& cmp_p1, Point& cmp_p2){
-	Point save_intersect_point;
+	Point save_point;
 	int corner_index = -1;
 	for(int i = 0;i < 4; i++){
 		double a = ((corners[i].x - cmp_p1.x) / (cmp_p2.x - cmp_p1.x));
@@ -98,36 +98,36 @@ int Field::corner_hit_check(Line ball_l, Point corners[], Point& cmp_p1, Point& 
 				return -1;
 			}
 			corner_index = i;
-			save_intersect_point.x = corners[i].x;
-			save_intersect_point.y = corners[i].y;
+			save_point.x = corners[i].x;
+			save_point.y = corners[i].y;
 		}
 	}
 	return corner_index;
 }
 
-int Field::collision(Line ball_l, Line walls[4], Point& cmp_p1, Point& cmp_p2){
-	Point perp_point_tmp;
-	Point save_intersect_point;
+int Field::collision(Line ball_l, Line walls[4], Point& p1, Point& p2){
+	Point tmp;
+	Point save_point;
 	int bounce_index = -1;
 	for(int i = 0; i < 4; i++){
-		perp_point_tmp = generate_intersect_point(ball_l, walls[i]);
-		double a = ((perp_point_tmp.x - cmp_p1.x) / (cmp_p2.x - cmp_p1.x));
-		double b = ((perp_point_tmp.y - cmp_p1.y) / (cmp_p2.y - cmp_p1.y));
+		tmp = generate_intersect_point(ball_l, walls[i]);
+		double a = ((tmp.x - p1.x) / (p2.x - p1.x));
+		double b = ((tmp.y - p1.y) / (p2.y - p1.y));
 		double scale = 0.000001;
     	a = floor(a / scale + 0.5) * scale;
     	b = floor(b / scale + 0.5) * scale;
 		if(essentiallyEqual(a, b) and ( a < 1 and a > 0)){
 			if(bounce_index != -1){
-				if(definitelyLessThan(calculate_distance(perp_point_tmp, cmp_p2), calculate_distance(save_intersect_point, cmp_p2)) ){
+				if(definitelyLessThan(calculate_distance(tmp, p2), calculate_distance(save_point, p2)) ){
 					bounce_index = i;
-					save_intersect_point.x = perp_point_tmp.x;
-					save_intersect_point.y = perp_point_tmp.y;
+					save_point.x = tmp.x;
+					save_point.y = tmp.y;
 					}
 			}	
 			else{
 				bounce_index = i;
-				save_intersect_point.x = perp_point_tmp.x;
-				save_intersect_point.y = perp_point_tmp.y;
+				save_point.x = tmp.x;
+				save_point.y = tmp.y;
 			}
 
 		}
