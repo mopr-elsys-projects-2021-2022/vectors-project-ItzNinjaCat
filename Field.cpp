@@ -77,12 +77,12 @@ double Field::calculate_distance(const Point& p1, const Point& p2){
 	return sqrt(pow((p2.x - p1.x), 2) + pow((p2.y - p1.y), 2));
 }
 
-int Field::corner_hit_check(Line ball_l, Point corners[], Point& cmp_p1, Point& cmp_p2){
+int Field::corner_hit_check(Line ball_l, Point corners[], Point& p1, Point& p2){
 	Point save_point;
 	int corner_index = -1;
 	for(int i = 0;i < 4; i++){
-		double a = ((corners[i].x - cmp_p1.x) / (cmp_p2.x - cmp_p1.x));
-		double b = ((corners[i].y - cmp_p1.y) / (cmp_p2.y - cmp_p1.y));
+		double a = ((corners[i].x - p1.x) / (p2.x - p1.x));
+		double b = ((corners[i].y - p1.y) / (p2.y - p1.y));
 		double scale = 0.000001;
 		//cout << "before "<< endl;
 		//cout << a << " " << b << endl;
@@ -90,11 +90,11 @@ int Field::corner_hit_check(Line ball_l, Point corners[], Point& cmp_p1, Point& 
     	b = floor(b / scale + 0.5) * scale;
     	//cout << "after "<< endl;
     	//cout << a << " " << b << endl;
-		if(essentiallyEqual(a, b) and ( a < 1)){
+		if((a == b) and ( a < 1)){
 			if( a < 0){
 
-				ball.center.x = cmp_p1.x;
-				ball.center.y = cmp_p1.y;
+				ball.center.x = p1.x;
+				ball.center.y = p1.y;
 				return -1;
 			}
 			corner_index = i;
@@ -116,9 +116,9 @@ int Field::collision(Line ball_l, Line walls[4], Point& p1, Point& p2){
 		double scale = 0.000001;
     	a = floor(a / scale + 0.5) * scale;
     	b = floor(b / scale + 0.5) * scale;
-		if(essentiallyEqual(a, b) and ( a < 1 and a > 0)){
+		if((a == b) and ( a < 1 and a > 0)){
 			if(bounce_index != -1){
-				if(definitelyLessThan(calculate_distance(tmp, p2), calculate_distance(save_point, p2)) ){
+				if(calculate_distance(tmp, p2) < calculate_distance(save_point, p2)){
 					bounce_index = i;
 					save_point.x = tmp.x;
 					save_point.y = tmp.y;
@@ -221,11 +221,11 @@ void Field::hit(Point target, double power) {
 			if(bounce_index == 3){
 			 next_index = 0;
 			} 
-			if(endPoints_cpy[bounce_index].y == 0 && endPoints_cpy[next_index].y == 0){
+			if(endPoints_cpy[bounce_index].y == 0 and endPoints_cpy[next_index].y == 0){
 				ball.center.x = new_p.x;
 				ball.center.y = 0 - new_p.y;
 			}
-			else if(endPoints_cpy[bounce_index].x == 0 && endPoints_cpy[next_index].x == 0){
+			else if(endPoints_cpy[bounce_index].x == 0 and endPoints_cpy[next_index].x == 0){
 				ball.center.y = new_p.y;
 				ball.center.x = 0 - new_p.x;
 			}
@@ -245,8 +245,8 @@ void Field::hit(Point target, double power) {
 			bounce_index = collision(ball_line, rectangle, ball.center, intersect);
 			corner_case = corner_hit_check(ball_line, endPoints, ball.center, intersect);
 		}
-			new_p.x = ball.center.x;
-			new_p.y = ball.center.y;
+		new_p.x = ball.center.x;
+		new_p.y = ball.center.y;
 	}
 	ball.center.x = new_p.x;
 	ball.center.y = new_p.y;
