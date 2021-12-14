@@ -46,22 +46,20 @@ bool check(Point corners[],const Point& p)
 
 
 
-	bool definitelyGreaterThan(double a, double b)
-	{
-   		 return (a - b) > ( (fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * numeric_limits<double>::epsilon());
-	}
+bool definitelyGreaterThan(double a, double b){
+   	return (a - b) > ( (fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * numeric_limits<double>::epsilon());
+}
 
-	bool definitelyLessThan(double a, double b)
-	{
-	    return (b - a) > ( (fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * numeric_limits<double>::epsilon());
-	}
-	bool essentiallyEqual(double a, double b)
-	{
-    	return fabs(a - b) <= ( (fabs(a) > fabs(b) ? fabs(b) : fabs(a)) * numeric_limits<double>::epsilon());
-	}
+bool definitelyLessThan(double a, double b){
+	return (b - a) > ( (fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * numeric_limits<double>::epsilon());
+}
+
+bool essentiallyEqual(double a, double b){
+    return fabs(a - b) <= ( (fabs(a) > fabs(b) ? fabs(b) : fabs(a)) * numeric_limits<double>::epsilon());
+}
 
 Point Field::generate_intersect_point(const Line& l1,const Line& l2){
-	Point perp_point_tmp;
+	Point tmp;
 	double x = (l1.B * l2.C - l2.B * l1.C) / (l1.A * l2.B - l2.A * l1.B);
 	double y = (l1.C * l2.A - l2.C * l1.A) / (l1.A * l2.B - l2.A * l1.B);
 	if(x == -0){
@@ -70,21 +68,21 @@ Point Field::generate_intersect_point(const Line& l1,const Line& l2){
 	if(y == -0){
 		y = 0;
 	}
-	perp_point_tmp = Point(x, y);
+	tmp = Point(x, y);
 
-	return perp_point_tmp;
+	return tmp;
 }
 
 double Field::calculate_distance(const Point& p1, const Point& p2){
 	return sqrt(pow((p2.x - p1.x), 2) + pow((p2.y - p1.y), 2));
 }
 
-int Field::corner_hit_check(Line ball_l, Point corners[], Point& cmp_p1, Point& cmp_p2){
-	Point save_intersect_point;
+int Field::corner_hit_check(Line ball_l, Point corners[], Point& p1, Point& p2){
+	Point save_point;
 	int corner_index = -1;
 	for(int i = 0;i < 4; i++){
-		double a = ((corners[i].x - cmp_p1.x) / (cmp_p2.x - cmp_p1.x));
-		double b = ((corners[i].y - cmp_p1.y) / (cmp_p2.y - cmp_p1.y));
+		double a = ((corners[i].x - p1.x) / (p2.x - p1.x));
+		double b = ((corners[i].y - p1.y) / (p2.y - p1.y));
 		double scale = 0.000001;
 		//cout << "before "<< endl;
 		//cout << a << " " << b << endl;
@@ -92,44 +90,44 @@ int Field::corner_hit_check(Line ball_l, Point corners[], Point& cmp_p1, Point& 
     	b = floor(b / scale + 0.5) * scale;
     	//cout << "after "<< endl;
     	//cout << a << " " << b << endl;
-		if(essentiallyEqual(a, b) and ( a < 1)){
+		if((a == b) and ( a < 1)){
 			if( a < 0){
 
-				ball.center.x = cmp_p1.x;
-				ball.center.y = cmp_p1.y;
+				ball.center.x = p1.x;
+				ball.center.y = p1.y;
 				return -1;
 			}
 			corner_index = i;
-			save_intersect_point.x = corners[i].x;
-			save_intersect_point.y = corners[i].y;
+			save_point.x = corners[i].x;
+			save_point.y = corners[i].y;
 		}
 	}
 	return corner_index;
 }
 
-int Field::collision(Line ball_l, Line walls[4], Point& cmp_p1, Point& cmp_p2){
-	Point perp_point_tmp;
-	Point save_intersect_point;
+int Field::collision(Line ball_l, Line walls[4], Point& p1, Point& p2){
+	Point tmp;
+	Point save_point;
 	int bounce_index = -1;
 	for(int i = 0; i < 4; i++){
-		perp_point_tmp = generate_intersect_point(ball_l, walls[i]);
-		double a = ((perp_point_tmp.x - cmp_p1.x) / (cmp_p2.x - cmp_p1.x));
-		double b = ((perp_point_tmp.y - cmp_p1.y) / (cmp_p2.y - cmp_p1.y));
+		save_point = generate_intersect_point(ball_l, walls[i]);
+		double a = ((tmp.x - p1.x) / (p2.x - p1.x));
+		double b = ((tmp.y - p1.y) / (p2.y - p1.y));
 		double scale = 0.000001;
     	a = floor(a / scale + 0.5) * scale;
     	b = floor(b / scale + 0.5) * scale;
-		if(essentiallyEqual(a, b) and ( a < 1 and a > 0)){
+		if((a == b) and ( a < 1 and a > 0)){
 			if(bounce_index != -1){
-				if(definitelyLessThan(calculate_distance(perp_point_tmp, cmp_p2), calculate_distance(save_intersect_point, cmp_p2)) ){
+				if(calculate_distance(tmp, p2) < calculate_distance(save_point, p2)){
 					bounce_index = i;
-					save_intersect_point.x = perp_point_tmp.x;
-					save_intersect_point.y = perp_point_tmp.y;
+					save_point.x = tmp.x;
+					save_point.y = tmp.y;
 					}
 			}	
 			else{
 				bounce_index = i;
-				save_intersect_point.x = perp_point_tmp.x;
-				save_intersect_point.y = perp_point_tmp.y;
+				save_point.x = tmp.x;
+				save_point.y = tmp.y;
 			}
 
 		}
@@ -139,17 +137,17 @@ int Field::collision(Line ball_l, Line walls[4], Point& cmp_p1, Point& cmp_p2){
 }
 
 Line Field::generate_perpendicular_line(const Line& line, const Point& p){
-	Line perp_line;
+	Line return_line;
 	if(line.A == 0){
-		perp_line = Line(1, 0, -p.x);
+		return_line = Line(1, 0, -p.x);
 	}
 	else if(line.B == 0){
-		perp_line = Line(0 , -1, p.y);
+		return_line = Line(0 , -1, p.y);
 	}
 	else{
-		perp_line = Line(-1 / line.A, -1, p.y - (-1 / line.A * p.x));
+		return_line = Line(-1 / line.A, -1, p.y - (-1 / line.A * p.x));
 	}
-	return perp_line;
+	return return_line;
 }
 
 Point Field::calculated_new_point(const Point& p1, const Point& p2, const double& power){
