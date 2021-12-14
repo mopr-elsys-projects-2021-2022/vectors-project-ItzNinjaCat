@@ -69,7 +69,13 @@ int Field::corner_hit_check(Line ball_l, Point corners[], Point& cmp_p1, Point& 
     	b = floor(b / scale + 0.5) * scale;
     	//cout << "after "<< endl;
     	//cout << a << " " << b << endl;
-		if(essentiallyEqual(a, b) and ( a < 1 and a >= 0)){
+		if(essentiallyEqual(a, b) and ( a < 1)){
+			if( a < 0){
+
+				ball.center.x = cmp_p1.x;
+				ball.center.y = cmp_p1.y;
+				return -1;
+			}
 			if(corner_index != -1){
 				if(definitelyLessThan(calculate_distance(corners[i], cmp_p2), calculate_distance(save_intersect_point, cmp_p2))){
 					corner_index = i;
@@ -191,7 +197,6 @@ void Field::hit(Point target, double power) {
 	}
 
 	int corner_case = corner_hit_check(ball_line, endPoints, new_p, ball.center);
-	cout << corner_case << endl;
 	int bounce_index = collision(ball_line, rectangle, new_p, ball.center);
 	while(bounce_index != -1 or corner_case != -1){
 		if(corner_case != -1){
