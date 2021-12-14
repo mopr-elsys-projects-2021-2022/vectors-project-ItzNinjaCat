@@ -146,9 +146,6 @@ void Field::hit(Point target, double power) {
 		throw "Incorrect power";
 		return;
 	}
-	if(!check(endPoints, ball.center)){
-		throw "Ball outside table";
-	}
 	Point new_p;
 	new_p = calculated_new_point(ball.center, target, power);
 	Line ball_line;
@@ -191,6 +188,10 @@ void Field::hit(Point target, double power) {
 		endPoints_cpy[2] = Point(endPoints[2].x, endPoints[2].y);
 		endPoints_cpy[3] = Point(endPoints[3].x, endPoints[3].y);
 	}
+	if(!check(endPoints_cpy, ball.center)){
+		throw "Ball outside table";
+	}
+
 
 	int corner_case = corner_hit_check(ball_line, endPoints, new_p, ball.center);
 	int bounce_index = collision(ball_line, rectangle, new_p, ball.center);
