@@ -142,12 +142,17 @@ Point Field::calculated_new_point(const Point& p1, const Point& p2, const double
 }
 
 void Field::hit(Point target, double power) {
-	if(power < 1 or power > 10){
-		throw "Incorrect power";
+	if(power < 1){
+		cerr << "Power is too low. Should be atleast 1." << endl;
+		return;
+	}
+	else if(power > 10){
+		cerr << "Power is too high. Should not be higher than 10." << endl;
 		return;
 	}
 	if(!check_if_point_is_inside_rect(endPoints, ball.center)){
-		throw "Ball outside table";
+		cerr << "Ball position is outside the given field." << endl;
+		return;
 	}
 	Point new_p;
 	new_p = calculated_new_point(ball.center, target, power);
