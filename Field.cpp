@@ -81,7 +81,7 @@ int Field::corner_hit_check(Line ball_l, Point corners[], Point& p1, Point& p2){
 	for(int i = 0;i < 4; i++){
 		double a = ((corners[i].x - p1.x) / (p2.x - p1.x));
 		double b = ((corners[i].y - p1.y) / (p2.y - p1.y));
-		double scale = 0.00000001;
+		double scale = 0.0000000001;
     	a = floor(a / scale + 0.5) * scale;
     	b = floor(b / scale + 0.5) * scale;
 		if((a == b) and ( a < 1)){
@@ -107,7 +107,7 @@ int Field::collision(Line ball_l, Line walls[4], Point& p1, Point& p2){
 		tmp = intersection_point(ball_l, walls[i]);
 		double a = ((tmp.x - p1.x) / (p2.x - p1.x));
 		double b = ((tmp.y - p1.y) / (p2.y - p1.y));
-		double scale = 0.00000001;
+		double scale = 0.0000000001;
     	a = floor(a / scale + 0.5) * scale;
     	b = floor(b / scale + 0.5) * scale;
 		if((a == b) and ( a < 1 and a > 0)){
