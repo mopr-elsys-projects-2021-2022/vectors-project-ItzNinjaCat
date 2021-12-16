@@ -81,13 +81,9 @@ int Field::corner_hit_check(Line ball_l, Point corners[], Point& p1, Point& p2){
 	for(int i = 0;i < 4; i++){
 		double a = ((corners[i].x - p1.x) / (p2.x - p1.x));
 		double b = ((corners[i].y - p1.y) / (p2.y - p1.y));
-		double scale = 0.000001;
-		//cout << "before "<< endl;
-		//cout << a << " " << b << endl;
+		double scale = 0.00000001;
     	a = floor(a / scale + 0.5) * scale;
     	b = floor(b / scale + 0.5) * scale;
-    	//cout << "after "<< endl;
-    	//cout << a << " " << b << endl;
 		if((a == b) and ( a < 1)){
 			if( a < 0){
 
@@ -111,7 +107,7 @@ int Field::collision(Line ball_l, Line walls[4], Point& p1, Point& p2){
 		tmp = intersection_point(ball_l, walls[i]);
 		double a = ((tmp.x - p1.x) / (p2.x - p1.x));
 		double b = ((tmp.y - p1.y) / (p2.y - p1.y));
-		double scale = 0.000001;
+		double scale = 0.00000001;
     	a = floor(a / scale + 0.5) * scale;
     	b = floor(b / scale + 0.5) * scale;
 		if((a == b) and ( a < 1 and a > 0)){
@@ -142,16 +138,16 @@ Point Field::calculated_new_point(const Point& p1, const Point& p2, const double
 }
 
 void Field::hit(Point target, double power) {
+	if(!check_if_point_is_inside_rect(endPoints, ball.center)){
+		cerr << "Ball position is outside the given field." << endl;
+		return;
+	}
 	if(power < 1){
 		cerr << "Power is too low. Should be atleast 1." << endl;
 		return;
 	}
 	else if(power > 10){
 		cerr << "Power is too high. Should not be higher than 10." << endl;
-		return;
-	}
-	if(!check_if_point_is_inside_rect(endPoints, ball.center)){
-		cerr << "Ball position is outside the given field." << endl;
 		return;
 	}
 	Point new_p;
