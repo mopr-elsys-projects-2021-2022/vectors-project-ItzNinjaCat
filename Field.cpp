@@ -30,9 +30,9 @@ double area(const Point& p1, const Point& p2, const Point& p3)
   
 bool check_if_point_is_inside_rect(Point corners[],const Point& p)
 {
-    double A = area(corners[0], corners[1], corners[2]) ;
+	double A = area(corners[0], corners[1], corners[2]) ;
 	double B = area(corners[0], corners[3], corners[2]);
-  	A += B;
+	A += B;
   	
     double A1 = area(p, corners[0], corners[1]);
     double A2 = area(p, corners[1], corners[2]);
