@@ -22,7 +22,6 @@ Field::Field(Point endPoints[4], Ball ball) {
 	this->startingPoint = ball.center;
 }
 
-
 double Field::area(const Point& p1, const Point& p2, const Point& p3){
     return abs((p1.x * (p2.y - p3.y) + p2.x * (p3.y - p1.y) + p3.x * (p1.y - p2.y)) / 2.0);
 }
@@ -71,6 +70,39 @@ Line Field::perpendicular_line(const Line& line, const Point& p){
 
 double Field::calculate_distance(const Point& p1, const Point& p2){
 	return sqrt(pow((p2.x - p1.x), 2) + pow((p2.y - p1.y), 2));
+}
+
+bool Field::ratio_check(Point endp[]){
+	double walls_len[4];
+	walls_len[0] = calculate_distance(endp[0],endp[1]);
+	walls_len[1] = calculate_distance(endp[1],endp[2]);
+	walls_len[2] = calculate_distance(endp[2],endp[3]);
+	walls_len[3] = calculate_distance(endp[3],endp[0]);
+	if(walls_len[0] != walls_len[2]){
+		return false;
+	}
+	else if(walls_len[1] != walls_len[3]){
+		return false;
+	}
+	else if(walls_len[0] != walls_len[1] / 2 or walls_len[1] != walls_len[0] / 2){
+		return false;
+	}
+	else{
+		return true;
+	}
+}
+
+bool Field::rectangle_check(Point endp[], Line walls[]){
+	for(int i = 0,j = i + 1; i < 4; i++){
+		if(j == 4){
+			j = 0;
+		}
+		Line perp_tmp = perpendicular_line(walls[i],endp[j]);
+		if(perp_tmp != walls[j]){
+			return false;
+		}
+	}
+	return true;
 }
 
 int Field::corner_hit_check(Line ball_l, Point corners[], Point& p1, Point& p2){
@@ -136,6 +168,23 @@ Point Field::calculated_new_point(const Point& p1, const Point& p2, const double
 }
 
 void Field::hit(Point target, double power) {
+	if(ball.diameter < 0){
+		cerr << "Ball diameter is smaller than 0." << endl;
+		return;		
+	}
+	if(!ratio_check(endPoints)){
+		cerr << "The ratio of the walls should be 1:2." << endl;
+		return;		
+	}
+	Line rectangle[4];
+	rectangle[0] = Line(endPoints[0], endPoints[1]);
+	rectangle[1] = Line(endPoints[1], endPoints[2]);
+	rectangle[2] = Line(endPoints[2], endPoints[3]);
+	rectangle[3] = Line(endPoints[3], endPoints[0]);
+	if(!rectangle_check(endPoints, rectangle)){
+		cerr << "Given endpoints do not create a rectangle." << endl;
+		return;
+	}
 	if(!check_if_point_is_inside_rect(endPoints, ball.center)){
 		cerr << "Ball position is outside the given field." << endl;
 		return;
@@ -152,12 +201,8 @@ void Field::hit(Point target, double power) {
 	new_p = calculated_new_point(ball.center, target, power);
 	Line ball_line;
 	ball_line = Line(ball.center, new_p);
-	Line rectangle[4];
 	Point endPoints_cpy[4];
-	rectangle[0] = Line(endPoints[0], endPoints[1]);
-	rectangle[1] = Line(endPoints[1], endPoints[2]);
-	rectangle[2] = Line(endPoints[2], endPoints[3]);
-	rectangle[3] = Line(endPoints[3], endPoints[0]);
+
 	if(ball.diameter){
 		Point smaller_endPoints[4];
 		smaller_endPoints[0].x = endPoints[0].x - ((ball.diameter / 2 )* (endPoints[0].x - endPoints[1].x) / calculate_distance(endPoints[0], endPoints[1]));

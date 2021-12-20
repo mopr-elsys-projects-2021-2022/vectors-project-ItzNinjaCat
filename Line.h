@@ -19,6 +19,22 @@ struct Line {
 			C = p1.x;
 		}
 	}
+	bool operator==(const Line& other){
+		if(this->A == other.A and this->B == other.B and this->C == other.C){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	bool operator!=(const Line& other){
+		if(*this == other){
+			return false;
+		}
+		else{
+			return true;
+		}
+	}
 	friend ostream& operator<<(ostream& os, const Line& l) {
 	os << "(" << l.A << ", " << l.B << ", " << l.C << ")";
 

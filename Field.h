@@ -14,6 +14,8 @@ public:
 	
 	double area(const Point& p1, const Point& p2, const Point& p3);
 	bool check_if_point_is_inside_rect(Point corners[],const Point& p);
+	bool ratio_check(Point endp[]);
+	bool rectangle_check(Point endp[], Line walls[]);
 	
 	int corner_hit_check(Line ball_l, Point corners[], Point& cmp_p1, Point& cmp_p2);
 	int collision(Line ball_l, Line walls[4], Point& cmp_p1, Point& cmp_p2);
