@@ -57,7 +57,7 @@ Point Field::intersection_point(const Line& l1,const Line& l2){
 Line Field::perpendicular_line(const Line& line, const Point& p){
 	Line perp_line;
 	if(line.A == 0){
-		perp_line = Line(1, 0, -p.x);
+		perp_line = Line(-1, 0, p.x);
 	}
 	else if(line.B == 0){
 		perp_line = Line(0 , -1, p.y);
@@ -93,7 +93,7 @@ bool Field::ratio_check(Point endp[]){
 }
 
 bool Field::rectangle_check(Point endp[], Line walls[]){
-	for(int i = 0,j = i + 1; i < 4; i++){
+	for(int i = 0,j = i + 1; i < 4; i++, j++){
 		if(j == 4){
 			j = 0;
 		}
