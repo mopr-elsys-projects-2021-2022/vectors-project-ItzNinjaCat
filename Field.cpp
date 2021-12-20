@@ -173,8 +173,8 @@ void Field::hit(Point target, double power) {
 		return;		
 	}
 	if(!ratio_check(endPoints)){
-		//cerr << "The ratio of the walls should be 1:2." << endl;
-		//return;		
+		cerr << "The ratio of the walls should be 1:2." << endl;
+		return;		
 	}
 	Line rectangle[4];
 	rectangle[0] = Line(endPoints[0], endPoints[1]);
