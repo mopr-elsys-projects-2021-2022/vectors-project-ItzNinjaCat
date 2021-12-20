@@ -23,7 +23,7 @@ Field::Field(Point endPoints[4], Ball ball) {
 }
 
 double Field::area(const Point& p1, const Point& p2, const Point& p3){
-    return abs((p1.x * (p2.y - p3.y) + p2.x * (p3.y - p1.y) + p3.x * (p1.y - p2.y)) / 2.0);
+    	return abs((p1.x * (p2.y - p3.y) + p2.x * (p3.y - p1.y) + p3.x * (p1.y - p2.y)) / 2.0);
 }
   
 bool Field::check_if_point_is_inside_rect(Point corners[],const Point& p){
@@ -31,12 +31,12 @@ bool Field::check_if_point_is_inside_rect(Point corners[],const Point& p){
 	double B = area(corners[0], corners[3], corners[2]);
 	A += B;
   	
-    double A1 = area(p, corners[0], corners[1]);
-    double A2 = area(p, corners[1], corners[2]);
-    double A3 = area(p, corners[2], corners[3]);
-    double A4 = area(p, corners[0], corners[3]);
+    	double A1 = area(p, corners[0], corners[1]);
+    	double A2 = area(p, corners[1], corners[2]);
+    	double A3 = area(p, corners[2], corners[3]);
+    	double A4 = area(p, corners[0], corners[3]);
 
-    return (A == A1 + A2 + A3 + A4);
+    	return (A == A1 + A2 + A3 + A4);
 }
 
 Point Field::intersection_point(const Line& l1,const Line& l2){
