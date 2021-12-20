@@ -84,7 +84,7 @@ bool Field::ratio_check(Point endp[]){
 	else if(walls_len[1] != walls_len[3]){
 		return false;
 	}
-	else if(walls_len[0] != walls_len[1] / 2 or walls_len[1] != walls_len[0] / 2){
+	else if(walls_len[0] != walls_len[1] / 2 and walls_len[1] != walls_len[0] / 2){
 		return false;
 	}
 	else{
