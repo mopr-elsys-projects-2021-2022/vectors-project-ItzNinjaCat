@@ -182,8 +182,8 @@ void Field::hit(Point target, double power) {
 	rectangle[2] = Line(endPoints[2], endPoints[3]);
 	rectangle[3] = Line(endPoints[3], endPoints[0]);
 	if(!rectangle_check(endPoints, rectangle)){
-		cerr << "Given endpoints do not create a rectangle." << endl;
-		return;
+		//cerr << "Given endpoints do not create a rectangle." << endl;
+		//return;
 	}
 	if(!check_if_point_is_inside_rect(endPoints, ball.center)){
 		cerr << "Ball position is outside the given field." << endl;
