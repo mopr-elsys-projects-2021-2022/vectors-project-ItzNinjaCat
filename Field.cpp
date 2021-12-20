@@ -112,8 +112,8 @@ int Field::corner_hit_check(Line ball_l, Point corners[], Point& p1, Point& p2){
 		double a = ((corners[i].x - p1.x) / (p2.x - p1.x));
 		double b = ((corners[i].y - p1.y) / (p2.y - p1.y));
 		double scale = 0.0000000000001;
-    	a = floor(a / scale + 0.5) * scale;
-    	b = floor(b / scale + 0.5) * scale;
+    		a = floor(a / scale + 0.5) * scale;
+    		b = floor(b / scale + 0.5) * scale;
 		if((a == b) and ( a < 1)){
 			if( a < 0){
 
@@ -182,8 +182,8 @@ void Field::hit(Point target, double power) {
 	rectangle[2] = Line(endPoints[2], endPoints[3]);
 	rectangle[3] = Line(endPoints[3], endPoints[0]);
 	if(!rectangle_check(endPoints, rectangle)){
-		//cerr << "Given endpoints do not create a rectangle." << endl;
-		//return;
+		cerr << "Given endpoints do not create a rectangle." << endl;
+		return;
 	}
 	if(!check_if_point_is_inside_rect(endPoints, ball.center)){
 		cerr << "Ball position is outside the given field." << endl;
